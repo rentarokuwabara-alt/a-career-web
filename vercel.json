@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build",
+  "env": {
+    "NEXT_PUBLIC_GAS_URL": "@gas_url"
+  }
+}
