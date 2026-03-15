@@ -24,6 +24,8 @@ export default function PaymentCheck() {
         console.error('Failed to load payments:', err);
         setChecks([
           { partnerId: 'BP001', partnerName: 'B社', month, staffCount: 1, days: 20, actualAmount: 200000, invoicedAmount: 200000, difference: 0, status: '確認済み' },
+          { partnerId: 'BP002', partnerName: 'C社', month, staffCount: 2, days: 40, actualAmount: 480000, invoicedAmount: 480000, difference: 0, status: '確認済み' },
+          { partnerId: 'BP003', partnerName: 'D社', month, staffCount: 1, days: 15, actualAmount: 180000, invoicedAmount: 180000, difference: 0, status: 'pending' },
         ]);
       } finally {
         setIsLoading(false);

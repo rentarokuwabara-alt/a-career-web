@@ -5,11 +5,8 @@
 
 import { ApiResponse, PaginatedResponse, Person, Project, Client, Worklog, MonthlySummary, BillingItem, PaymentCheck } from './types';
 
-const GAS_URL = process.env.NEXT_PUBLIC_GAS_URL || '';
-
-if (!GAS_URL) {
-  console.warn('⚠️ NEXT_PUBLIC_GAS_URL is not set. API calls will fail. Check .env.local');
-}
+// Use local API proxy instead of calling GAS directly (avoids CORS issues)
+const API_URL = '/api/gas';
 
 /**
  * Base fetch wrapper
@@ -21,7 +18,7 @@ async function callGAS<T = any>(action: string, payload?: any): Promise<T> {
       ...payload,
     };
 
-    const response = await fetch(GAS_URL, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -141,5 +138,5 @@ export async function getDashboardKPI(month: string) {
 // ========================================
 
 export function isAPIAvailable(): boolean {
-  return !!GAS_URL && GAS_URL !== '';
+  return true; // API proxy is always available
 }
