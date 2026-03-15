@@ -8,3 +8,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+// Rebuild trigger - Sun Mar 15 22:26:37 JST 2026
