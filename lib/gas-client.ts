@@ -3,7 +3,7 @@
  * Google Apps Script API client
  */
 
-import { ApiResponse, PaginatedResponse } from './types';
+import { ApiResponse, PaginatedResponse, Person, Project, Client, Worklog, MonthlySummary, BillingItem, PaymentCheck } from './types';
 
 const GAS_URL = process.env.NEXT_PUBLIC_GAS_URL || '';
 
@@ -45,7 +45,7 @@ async function callGAS<T = any>(action: string, payload?: any): Promise<T> {
 // ========================================
 
 export async function readPeople() {
-  return callGAS('readPeople') as Promise<PaginatedResponse>;
+  return callGAS('readPeople') as Promise<PaginatedResponse<Person>>;
 }
 
 export async function createPerson(payload: any) {
@@ -61,7 +61,7 @@ export async function deletePerson(id: string) {
 }
 
 export async function readProjects() {
-  return callGAS('readProjects') as Promise<PaginatedResponse>;
+  return callGAS('readProjects') as Promise<PaginatedResponse<Project>>;
 }
 
 export async function createProject(payload: any) {
@@ -77,7 +77,7 @@ export async function deleteProject(id: string) {
 }
 
 export async function readClients() {
-  return callGAS('readClients') as Promise<PaginatedResponse>;
+  return callGAS('readClients') as Promise<PaginatedResponse<Client>>;
 }
 
 export async function createClient(payload: any) {
@@ -97,7 +97,7 @@ export async function deleteClient(id: string) {
 // ========================================
 
 export async function readWorklog(month: string) {
-  return callGAS('readWorklog', { month }) as Promise<PaginatedResponse>;
+  return callGAS('readWorklog', { month }) as Promise<PaginatedResponse<Worklog>>;
 }
 
 export async function createWorklog(payload: any) {
@@ -121,15 +121,15 @@ export async function bulkCreateWorklog(data: any[]) {
 // ========================================
 
 export async function aggregateMonthly(month: string) {
-  return callGAS('aggregateMonthly', { month }) as Promise<PaginatedResponse>;
+  return callGAS('aggregateMonthly', { month }) as Promise<PaginatedResponse<MonthlySummary>>;
 }
 
 export async function generateBillingList(month: string) {
-  return callGAS('generateBillingList', { month }) as Promise<PaginatedResponse>;
+  return callGAS('generateBillingList', { month }) as Promise<PaginatedResponse<BillingItem>>;
 }
 
 export async function generatePaymentCheck(month: string) {
-  return callGAS('generatePaymentCheck', { month }) as Promise<PaginatedResponse>;
+  return callGAS('generatePaymentCheck', { month }) as Promise<PaginatedResponse<PaymentCheck>>;
 }
 
 export async function getDashboardKPI(month: string) {

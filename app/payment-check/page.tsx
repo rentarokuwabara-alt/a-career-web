@@ -5,7 +5,7 @@ import { DataTable } from '@/components/DataTable';
 import { MonthPicker } from '@/components/MonthPicker';
 import { generatePaymentCheck } from '@/lib/gas-client';
 import { getCurrentMonth } from '@/lib/utils';
-import { PaymentCheck } from '@/lib/types';
+import type { PaymentCheck } from '@/lib/types';
 
 export default function PaymentCheck() {
   const [month, setMonth] = useState(getCurrentMonth());
