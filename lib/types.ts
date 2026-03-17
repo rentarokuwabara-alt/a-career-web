@@ -46,6 +46,29 @@ export interface Client {
 }
 
 // ========================================
+// Project Type (プロジェクト種別)
+// ========================================
+
+export const PROJECT_TYPES = {
+  mobile_weekend: { key: 'mobile_weekend', label: '携帯販売 週末', slug: 'mobile-weekend' },
+  mobile_outsource: { key: 'mobile_outsource', label: '携帯販売 業務委託', slug: 'mobile-outsource' },
+  reform: { key: 'reform', label: 'リフォーム案件', slug: 'reform' },
+  gas_sales: { key: 'gas_sales', label: 'ガス営業案件', slug: 'gas-sales' },
+  other: { key: 'other', label: 'その他', slug: 'other' },
+} as const;
+
+export type ProjectTypeKey = keyof typeof PROJECT_TYPES;
+
+export function getProjectTypeBySlug(slug: string): ProjectTypeKey | undefined {
+  const entry = Object.entries(PROJECT_TYPES).find(([, v]) => v.slug === slug);
+  return entry ? (entry[0] as ProjectTypeKey) : undefined;
+}
+
+export function getProjectTypeLabel(key: string): string {
+  return (PROJECT_TYPES as any)[key]?.label ?? key;
+}
+
+// ========================================
 // Transaction Types
 // ========================================
 
@@ -53,7 +76,9 @@ export interface Worklog {
   id: string;
   date: string;
   personId: string;
+  personName?: string;
   projectId: string;
+  projectName?: string;
   location: string;
   sellPrice: number;
   payPrice: number;
@@ -65,6 +90,7 @@ export interface Worklog {
   sell?: number;
   cost?: number;
   profit?: number;
+  projectType?: string;
   notes?: string;
 }
 
