@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal } from 'lucide-react';
+import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal, Star } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -30,8 +30,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: FileText,
       submenu: [
         { label: '全体', href: '/work-log', icon: FileText },
-        { label: '携帯販売 週末', href: '/work-log/mobile-weekend', icon: Smartphone },
-        { label: '携帯販売 業務委託', href: '/work-log/mobile-outsource', icon: Smartphone },
+        { label: 'First 委託', href: '/work-log/first-outsource', icon: Star },
+        { label: 'First 週末', href: '/work-log/first-weekend', icon: Star },
+        { label: '携帯販売 委託案件', href: '/work-log/mobile-outsource', icon: Smartphone },
+        { label: '携帯販売 週末案件', href: '/work-log/mobile-weekend', icon: Smartphone },
         { label: 'リフォーム', href: '/work-log/reform', icon: Wrench },
         { label: 'ガス営業', href: '/work-log/gas-sales', icon: Flame },
         { label: 'その他', href: '/work-log/other', icon: MoreHorizontal },
