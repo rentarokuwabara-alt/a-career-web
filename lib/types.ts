@@ -22,7 +22,7 @@ export interface Person {
 
 export interface Project {
   id: string;
-  business: 'COMM' | 'RE_RENT' | 'RE_REFORM' | 'HR';
+  business: 'COMM' | 'RE_RENT' | 'RE_REFORM' | 'HR' | 'FIRST';
   name: string;
   client: string;
   clientId: string;
@@ -50,8 +50,10 @@ export interface Client {
 // ========================================
 
 export const PROJECT_TYPES = {
-  mobile_weekend: { key: 'mobile_weekend', label: '携帯販売 週末', slug: 'mobile-weekend' },
-  mobile_outsource: { key: 'mobile_outsource', label: '携帯販売 業務委託', slug: 'mobile-outsource' },
+  first_outsource: { key: 'first_outsource', label: 'First 委託', slug: 'first-outsource' },
+  first_weekend: { key: 'first_weekend', label: 'First 週末', slug: 'first-weekend' },
+  mobile_weekend: { key: 'mobile_weekend', label: '携帯販売 週末案件', slug: 'mobile-weekend' },
+  mobile_outsource: { key: 'mobile_outsource', label: '携帯販売 委託案件', slug: 'mobile-outsource' },
   reform: { key: 'reform', label: 'リフォーム案件', slug: 'reform' },
   gas_sales: { key: 'gas_sales', label: 'ガス営業案件', slug: 'gas-sales' },
   other: { key: 'other', label: 'その他', slug: 'other' },
@@ -200,3 +202,4 @@ export interface ModalState {
   mode: 'create' | 'edit' | 'delete';
   data?: any;
 }
+
