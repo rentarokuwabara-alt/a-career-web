@@ -52,7 +52,7 @@ export default function Billing() {
       try {
         const result = await generateBillingList(month);
         if (result.data) {
-          setCompanies(result.data as BillingCompany[]);
+          setCompanies(result.data as any);
         }
       } catch (err) {
         console.error('Failed to load billings:', err);
