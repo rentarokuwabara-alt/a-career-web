@@ -203,3 +203,32 @@ export interface ModalState {
   data?: any;
 }
 
+
+
+// ========================================
+// Billing Company Types (for billing page)
+// ========================================
+
+export interface BillingDetail {
+  date: string;
+  personName: string;
+  projectName: string;
+  location: string;
+  sellPrice: number;
+  transport: number;
+  amount: number;
+}
+
+export interface BillingCompany {
+  invoiceId: string;
+  clientId: string;
+  clientName: string;
+  month: string;
+  staffCount: number;
+  days: number;
+  subtotal: number;
+  transport: number;
+  total: number;
+  status: string;
+  details: BillingDetail[];
+}
