@@ -1,16 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DataTable } from '@/components/DataTable';
 import { MonthPicker } from '@/components/MonthPicker';
 import { generatePaymentCheck } from '@/lib/gas-client';
 import { getCurrentMonth } from '@/lib/utils';
-import type { PaymentCheck } from '@/lib/types';
+import { PaymentCheck } from '@/lib/types';
+import { CheckCircle2, Circle, Clock, AlertTriangle, Building2 } from 'lucide-react';
 
-export default function PaymentCheck() {
+type PaymentStatus = 'pending' | 'confirmed' | 'transferred' | 'discrepancy';
+
+const STATUS_CONFIG: Record<PaymentStatus, { label: string; color: string; icon: any; bg: string }> = {
+  pending: { label: 'æªç¢ºèª', color: 'text-gray-400', icon: Circle, bg: 'bg-gray-100' },
+  confirmed: { label: 'ç¢ºèªæ¸ã¿', color: 'text-blue-600', icon: CheckCircle2, bg: 'bg-blue-50' },
+  transferred: { label: 'æ¯è¾¼å®äº', color: 'text-green-600', icon: CheckCircle2, bg: 'bg-green-50' },
+  discrepancy: { label: 'å·®ç°ãã', color: 'text-red-600', icon: AlertTriangle, bg: 'bg-red-50' },
+};
+
+export default function PaymentCheckPage() {
   const [month, setMonth] = useState(getCurrentMonth());
-  const [checks, setChecks] = useState<PaymentCheck[]>([]);
+  const [items, setItems] = useState<PaymentCheck[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [statuses, setStatuses] = useState<Record<string, PaymentStatus>>({});
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -18,47 +28,119 @@ export default function PaymentCheck() {
       try {
         const result = await generatePaymentCheck(month);
         if (result.data) {
-          setChecks(result.data as PaymentCheck[]);
+          setItems(result.data as PaymentCheck[]);
         }
       } catch (err) {
-        console.error('Failed to load payments:', err);
-        setChecks([
-          { partnerId: 'BP001', partnerName: 'B社', month, staffCount: 1, days: 20, actualAmount: 200000, invoicedAmount: 200000, difference: 0, status: '確認済み' },
-          { partnerId: 'BP002', partnerName: 'C社', month, staffCount: 2, days: 40, actualAmount: 480000, invoicedAmount: 480000, difference: 0, status: '確認済み' },
-          { partnerId: 'BP003', partnerName: 'D社', month, staffCount: 1, days: 15, actualAmount: 180000, invoicedAmount: 180000, difference: 0, status: 'pending' },
-        ]);
+        console.error('Failed to load payment checks:', err);
+        setItems([]);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchPayments();
   }, [month]);
 
+  const getStatus = (partnerId: string): PaymentStatus => {
+    return statuses[partnerId] || 'pending';
+  };
+
+  const cycleStatus = (partnerId: string) => {
+    const order: PaymentStatus[] = ['pending', 'confirmed', 'transferred', 'discrepancy'];
+    const current = getStatus(partnerId);
+    const next = order[(order.indexOf(current) + 1) % order.length];
+    setStatuses((prev) => ({ ...prev, [partnerId]: next }));
+  };
+
+  const totalAmount = items.reduce((s, i) => s + i.actualAmount, 0);
+  const transferredCount = Object.values(statuses).filter((s) => s === 'transferred').length;
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1>支払確認</h1>
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-xl font-bold">æ¯æç¢ºèª</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {month} | {items.length}ç¤¾ã®æ¯æå
+          </p>
+        </div>
         <MonthPicker value={month} onChange={setMonth} />
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <DataTable
-          columns={[
-            { header: 'パートナーID', accessor: 'partnerId', format: 'text', width: 120 },
-            { header: 'パートナー名', accessor: 'partnerName', format: 'text', width: 150 },
-            { header: '人員', accessor: 'staffCount', format: 'number', align: 'right', width: 70 },
-            { header: '稼働日数', accessor: 'days', format: 'number', align: 'right', width: 90 },
-            { header: '稼働実績額', accessor: 'actualAmount', format: 'currency', align: 'right' },
-            { header: '相手先請求額', accessor: 'invoicedAmount', format: 'currency', align: 'right' },
-            { header: '差異', accessor: 'difference', format: 'currency', align: 'right' },
-            { header: 'ステータス', accessor: 'status', format: 'text', width: 100 },
-          ]}
-          data={checks}
-          isLoading={isLoading}
-          emptyMessage="支払データがありません"
-        />
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-xs text-gray-500">æ¯æåæ°</p>
+          <p className="text-lg font-bold">{items.length}ç¤¾</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-xs text-gray-500">æ¯æç·é¡</p>
+          <p className="text-lg font-bold">Â¥{totalAmount.toLocaleString()}</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-xs text-gray-500">æ¯è¾¼å®äº</p>
+          <p className="text-lg font-bold text-green-600">{transferredCount}ç¤¾</p>
+        </div>
       </div>
+
+      {/* Partner list */}
+      {isLoading ? (
+        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">èª­ã¿è¾¼ã¿ä¸­...</div>
+      ) : items.length === 0 ? (
+        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">æ¯æãã¼ã¿ãããã¾ãã</div>
+      ) : (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 text-xs text-gray-500 border-b">
+                <th className="text-left px-5 py-3 font-medium">æ¯æå</th>
+                <th className="text-right px-4 py-3 font-medium">äººæ°</th>
+                <th className="text-right px-4 py-3 font-medium">ç¨¼åæ¥æ°</th>
+                <th className="text-right px-4 py-3 font-medium">æ¯æé¡ï¼è¨ç®ï¼</th>
+                <th className="text-right px-4 py-3 font-medium">è«æ±é¡</th>
+                <th className="text-right px-4 py-3 font-medium">å·®é¡</th>
+                <th className="text-center px-4 py-3 font-medium">ã¹ãã¼ã¿ã¹</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => {
+                const status = getStatus(item.partnerId);
+                const statusConfig = STATUS_CONFIG[status];
+                const StatusIcon = statusConfig.icon;
+                const diff = item.invoicedAmount - item.actualAmount;
+
+                return (
+                  <tr key={item.partnerId} className="border-b hover:bg-gray-50 transition">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-2">
+                        <Building2 size={16} className="text-gray-400" />
+                        <span className="font-medium">{item.partnerName}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-right">{item.staffCount}å</td>
+                    <td className="px-4 py-4 text-right">{item.days}æ¥</td>
+                    <td className="px-4 py-4 text-right font-medium">Â¥{item.actualAmount.toLocaleString()}</td>
+                    <td className="px-4 py-4 text-right text-gray-500">Â¥{item.invoicedAmount.toLocaleString()}</td>
+                    <td className={`px-4 py-4 text-right ${diff !== 0 ? 'text-red-600 font-medium' : 'text-gray-400'}`}>
+                      {diff !== 0 ? `Â¥${diff.toLocaleString()}` : '-'}
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <button
+                        onClick={() => cycleStatus(item.partnerId)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition ${statusConfig.bg} ${statusConfig.color} hover:opacity-80`}
+                      >
+                        <StatusIcon size={14} />
+                        {statusConfig.label}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
+
