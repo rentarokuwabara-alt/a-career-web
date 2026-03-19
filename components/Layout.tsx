@@ -26,13 +26,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         { label: '携帯販売 週末', href: '/work-log/mobile-weekend', icon: Smartphone },
         { label: '携帯販売 業務委託', href: '/work-log/mobile-outsource', icon: Smartphone },
         { label: 'リフォーム', href: '/work-log/reform', icon: Wrench },
-        { label: 'ガス営業', href: '/work-log/gas-sales', icon: Flame },
+        { label: 'ガス延業', href: '/work-log/gas-sales', icon: Flame },
         { label: 'その他', href: '/work-log/other', icon: MoreHorizontal },
       ],
     },
     { label: '月次サマリー', href: '/monthly', icon: Calculator },
-    { label: '売上請求（出）', href: '/billing', icon: PieChart },
-    { label: '仕入請求（入）', href: '/payment-check', icon: LogOut },
+    { label: '売上請求', href: '/billing', icon: PieChart },
+    { label: '仕入請求', href: '/payment-check', icon: LogOut },
     {
       label: 'マスター管理',
       submenu: [
@@ -142,4 +142,3 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default Layout;
-
