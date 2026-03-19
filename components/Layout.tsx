@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal, Star } from 'lucide-react';
+import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -14,14 +14,7 @@ interface NavItem {
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState('');
-  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    setMounted(true);
-    setLastUpdate(new Date().toLocaleString('ja-JP'));
-  }, []);
 
   const navItems: NavItem[] = [
     { label: 'ダッシュボード', href: '/', icon: Home },
@@ -30,18 +23,16 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: FileText,
       submenu: [
         { label: '全体', href: '/work-log', icon: FileText },
-        { label: 'First 委託', href: '/work-log/first-outsource', icon: Star },
-        { label: 'First 週末', href: '/work-log/first-weekend', icon: Star },
-        { label: '携帯販売 委託案件', href: '/work-log/mobile-outsource', icon: Smartphone },
-        { label: '携帯販売 週末案件', href: '/work-log/mobile-weekend', icon: Smartphone },
+        { label: '携帯販売 週末', href: '/work-log/mobile-weekend', icon: Smartphone },
+        { label: '携帯販売 業務委託', href: '/work-log/mobile-outsource', icon: Smartphone },
         { label: 'リフォーム', href: '/work-log/reform', icon: Wrench },
         { label: 'ガス営業', href: '/work-log/gas-sales', icon: Flame },
         { label: 'その他', href: '/work-log/other', icon: MoreHorizontal },
       ],
     },
     { label: '月次サマリー', href: '/monthly', icon: Calculator },
-    { label: '請求管理', href: '/billing', icon: PieChart },
-    { label: '支払確認', href: '/payment-check', icon: LogOut },
+    { label: '売上請求（出）', href: '/billing', icon: PieChart },
+    { label: '仕入請求（入）', href: '/payment-check', icon: LogOut },
     {
       label: 'マスター管理',
       submenu: [
@@ -76,9 +67,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             const IconComponent = item.icon;
 
             if (item.submenu) {
-              const active = mounted && isSubmenuActive(item.submenu);
+              const active = isSubmenuActive(item.submenu);
               return (
-                <details key={idx} className="group" open={active || undefined}>
+                <details key={idx} className="group" open={active}>
                   <summary className={`cursor-pointer flex items-center gap-3 px-3 py-2 rounded text-sm transition ${active ? 'bg-gray-800 text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}>
                     {IconComponent && <IconComponent size={18} className="flex-shrink-0" />}
                     {sidebarOpen && <span className="flex-1">{item.label}</span>}
@@ -130,8 +121,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             >
               <Menu size={24} />
             </button>
-            <div className="text-sm text-gray-600" suppressHydrationWarning>
-              {lastUpdate ? `最終更新: ${lastUpdate}` : '\u00A0'}
+            <div className="text-sm text-gray-600">
+              最終更新: {new Date().toLocaleString('ja-JP')}
             </div>
           </div>
         </header>
