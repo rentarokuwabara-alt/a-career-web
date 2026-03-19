@@ -33,10 +33,10 @@ interface BillingCompany {
 type BillingStatus = 'pending' | 'ready' | 'invoiced' | 'paid';
 
 const STATUS_CONFIG: Record<BillingStatus, { label: string; color: string; icon: any; bg: string }> = {
-  pending: { label: 'æªæºå', color: 'text-gray-400', icon: Circle, bg: 'bg-gray-100' },
-  ready: { label: 'è«æ±æºåå®äº', color: 'text-yellow-600', icon: Clock, bg: 'bg-yellow-50' },
-  invoiced: { label: 'è«æ±æ¸ã¿', color: 'text-blue-600', icon: CheckCircle2, bg: 'bg-blue-50' },
-  paid: { label: 'å¥éç¢ºèªæ¸ã¿', color: 'text-green-600', icon: CheckCircle2, bg: 'bg-green-50' },
+  pending: { label: '未準備', color: 'text-gray-400', icon: Circle, bg: 'bg-gray-100' },
+  ready: { label: '請求準備完了', color: 'text-yellow-600', icon: Clock, bg: 'bg-yellow-50' },
+  invoiced: { label: '請求済み', color: 'text-blue-600', icon: CheckCircle2, bg: 'bg-blue-50' },
+  paid: { label: '入金確認済み', color: 'text-green-600', icon: CheckCircle2, bg: 'bg-green-50' },
 };
 
 export default function Billing() {
@@ -98,16 +98,16 @@ export default function Billing() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-xl font-bold">è«æ±ç®¡ç</h1>
+          <h1 className="text-xl font-bold">請求管理</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {month} | {companies.length}ç¤¾ã®è«æ±å
+            {month} | {companies.length}社の請求先
           </p>
         </div>
         <div className="flex items-center gap-3">
           <MonthPicker value={month} onChange={setMonth} />
           <button className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium shadow-sm transition">
             <FileText size={16} />
-            freeeé£æº
+            freee連携
           </button>
         </div>
       </div>
@@ -115,28 +115,28 @@ export default function Billing() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-xs text-gray-500">è«æ±åæ°</p>
-          <p className="text-lg font-bold">{companies.length}ç¤¾</p>
+          <p className="text-xs text-gray-500">請求先数</p>
+          <p className="text-lg font-bold">{companies.length}社</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-xs text-gray-500">è«æ±ç·é¡</p>
-          <p className="text-lg font-bold">Â¥{totalAmount.toLocaleString()}</p>
+          <p className="text-xs text-gray-500">請求総額</p>
+          <p className="text-lg font-bold">¥{totalAmount.toLocaleString()}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-xs text-gray-500">è«æ±æ¸ã¿</p>
-          <p className="text-lg font-bold text-blue-600">{invoicedCount}ç¤¾</p>
+          <p className="text-xs text-gray-500">請求済み</p>
+          <p className="text-lg font-bold text-blue-600">{invoicedCount}社</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-xs text-gray-500">å¥éç¢ºèªæ¸ã¿</p>
-          <p className="text-lg font-bold text-green-600">{paidCount}ç¤¾</p>
+          <p className="text-xs text-gray-500">入金確認済み</p>
+          <p className="text-lg font-bold text-green-600">{paidCount}社</p>
         </div>
       </div>
 
       {/* Company list */}
       {isLoading ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">èª­ã¿è¾¼ã¿ä¸­...</div>
+        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">読み込み中...</div>
       ) : companies.length === 0 ? (
-        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">è«æ±ãã¼ã¿ãããã¾ãã</div>
+        <div className="bg-white rounded-lg shadow p-12 text-center text-gray-400">請求データがありません</div>
       ) : (
         <div className="space-y-3">
           {companies.map((company) => {
@@ -157,12 +157,12 @@ export default function Billing() {
                     <Building2 size={18} className="text-blue-500" />
                     <div>
                       <span className="font-bold text-sm">{company.clientName}</span>
-                      <span className="ml-3 text-xs text-gray-400">{company.staffCount}å / {company.days}æ¥ç¨¼å</span>
+                      <span className="ml-3 text-xs text-gray-400">{company.staffCount}名 / {company.days}日稼働</span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <span className="font-bold text-lg">Â¥{company.total.toLocaleString()}</span>
+                    <span className="font-bold text-lg">¥{company.total.toLocaleString()}</span>
 
                     {/* Status button */}
                     <button
@@ -181,13 +181,13 @@ export default function Billing() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="text-xs text-gray-400 border-b">
-                          <th className="text-left py-2 font-normal">æ¥ä»</th>
-                          <th className="text-left py-2 font-normal">äººæ</th>
-                          <th className="text-left py-2 font-normal">æ¡ä»¶</th>
-                          <th className="text-left py-2 font-normal">å¤åå°</th>
-                          <th className="text-right py-2 font-normal">åä¾¡</th>
-                          <th className="text-right py-2 font-normal">äº¤éè²»</th>
-                          <th className="text-right py-2 font-normal">éé¡</th>
+                          <th className="text-left py-2 font-normal">日付</th>
+                          <th className="text-left py-2 font-normal">人材</th>
+                          <th className="text-left py-2 font-normal">案件</th>
+                          <th className="text-left py-2 font-normal">勤務地</th>
+                          <th className="text-right py-2 font-normal">単価</th>
+                          <th className="text-right py-2 font-normal">交通費</th>
+                          <th className="text-right py-2 font-normal">金額</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -197,18 +197,18 @@ export default function Billing() {
                             <td className="py-2">{d.personName}</td>
                             <td className="py-2">{d.projectName}</td>
                             <td className="py-2 text-gray-500">{d.location}</td>
-                            <td className="py-2 text-right">Â¥{d.sellPrice.toLocaleString()}</td>
-                            <td className="py-2 text-right text-gray-500">Â¥{d.transport.toLocaleString()}</td>
-                            <td className="py-2 text-right font-medium">Â¥{d.amount.toLocaleString()}</td>
+                            <td className="py-2 text-right">¥{d.sellPrice.toLocaleString()}</td>
+                            <td className="py-2 text-right text-gray-500">¥{d.transport.toLocaleString()}</td>
+                            <td className="py-2 text-right font-medium">¥{d.amount.toLocaleString()}</td>
                           </tr>
                         ))}
                       </tbody>
                       <tfoot>
                         <tr className="font-bold">
-                          <td colSpan={4} className="py-2">åè¨</td>
-                          <td className="py-2 text-right">Â¥{company.subtotal.toLocaleString()}</td>
-                          <td className="py-2 text-right">Â¥{company.transport.toLocaleString()}</td>
-                          <td className="py-2 text-right">Â¥{company.total.toLocaleString()}</td>
+                          <td colSpan={4} className="py-2">合計</td>
+                          <td className="py-2 text-right">¥{company.subtotal.toLocaleString()}</td>
+                          <td className="py-2 text-right">¥{company.transport.toLocaleString()}</td>
+                          <td className="py-2 text-right">¥{company.total.toLocaleString()}</td>
                         </tr>
                       </tfoot>
                     </table>
