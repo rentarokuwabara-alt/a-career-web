@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal } from 'lucide-react';
+import { Menu, Home, FileText, Calculator, PieChart, LogOut, Users, Briefcase, Smartphone, Wrench, Flame, MoreHorizontal, Building2, Star } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -23,10 +23,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       icon: FileText,
       submenu: [
         { label: '全体', href: '/work-log', icon: FileText },
+        { label: 'ファースト', href: '/work-log/first', icon: Star },
+        { label: '週末ファースト', href: '/work-log/first-weekend', icon: Star },
+        { label: '委託', href: '/work-log/first-outsource', icon: Star },
         { label: '携帯販売 週末', href: '/work-log/mobile-weekend', icon: Smartphone },
-        { label: '携帯販売 業務委託', href: '/work-log/mobile-outsource', icon: Smartphone },
+        { label: '携帯販売 委託', href: '/work-log/mobile-outsource', icon: Smartphone },
         { label: 'リフォーム', href: '/work-log/reform', icon: Wrench },
-        { label: 'ガス延業', href: '/work-log/gas-sales', icon: Flame },
+        { label: 'ガス営業', href: '/work-log/gas-sales', icon: Flame },
         { label: 'その他', href: '/work-log/other', icon: MoreHorizontal },
       ],
     },
@@ -37,6 +40,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       label: 'マスター管理',
       submenu: [
         { label: '人材', href: '/master/people', icon: Users },
+        { label: '会社', href: '/master/companies', icon: Building2 },
         { label: '案件', href: '/master/projects', icon: Briefcase },
         { label: '取引先', href: '/master/clients', icon: Users },
       ],
